@@ -1,0 +1,3 @@
+# urdfs are generated, dont stage them
+*.urdf
+

@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="corobot">
+    <xacro:include filename="$(find corobot_description)/urdf/corobot.gazebo" />
+
+    <xacro:property name="BASE_LENGTH" value="0.248" />
+    <xacro:property name="BASE_WIDTH" value="0.201" />
+    <xacro:property name="BASE_HEIGHT" value="0.060" />
+    <xacro:property name="BASE_MASS" value="1.0" />
+
+    <xacro:property name="WHEEL_THICKNESS" value="0.065" />
+    <xacro:property name="WHEEL_RADIUS" value="0.060" />
+
+    <xacro:property name="WHEEL_TO_BACK" value="${WHEEL_RADIUS}" />
+    <xacro:property name="WHEELBASE" value="0.280" />
+    <xacro:property name="AXLE_AXLE" value="0.190" />
+
+    <xacro:property name="WHEEL_MASS" value="0.1" />
+    <xacro:property name="WHEEL_MOMENT" value="${WHEEL_MASS/12*(3*WHEEL_RADIUS**2+WHEEL_THICKNESS**2)}" />
+
+    <xacro:property name="PLATE_THICKNESS" value="0.006"/>
+
+    <xacro:macro name="cylinder_inertia" params="radius height mass">
+        <xacro:property name="moment" value="${mass/12*(3*radius**2+height**2)}" />
+        <inertial>
+            <mass value="${mass}"/>
+            <inertia ixx="${moment}" iyy="${moment}" izz="${moment}" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="box_inertia" params="x y z mass">
+        <inertial>
+            <mass value="${mass}"/>
+            <inertia
+                ixx="${mass/12*(z**2+x**2)}"
+                iyy="${mass/12*(y**2+x**2)}"
+                izz="${mass/12*(y**2+z**2)}"
+                ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="plate" params="name width length">
+        <link name="${name}">
+            <visual>
+                <geometry>
+                    <box size="${length} ${width} ${PLATE_THICKNESS}"/>
+                </geometry>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${length} ${width} ${PLATE_THICKNESS}"/>
+                </geometry>
+            </collision>
+            <xacro:box_inertia x="${length}" y="${width}" z="${PLATE_THICKNESS}" mass="0"/>
+        </link>
+    </xacro:macro>
+
+    <xacro:macro name="wheel" params="wheel_link origin">
+        <link name="${wheel_link}">
+            <visual>
+                <origin rpy="${pi/2} 0 0"/>
+                <geometry>
+                    <mesh filename="package://corobot_description/meshes/wheel.stl"/>
+                </geometry>
+            </visual>
+            <collision>
+                <origin rpy="${pi/2} 0 0"/>
+                <geometry>
+                    <cylinder length="${WHEEL_THICKNESS}" radius="${WHEEL_RADIUS}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="${WHEEL_MASS}"/>
+                <inertia ixx="${WHEEL_MOMENT}" iyy="${WHEEL_MOMENT}" izz="${WHEEL_MOMENT}" ixy="0" ixz="0" iyz="0"/>
+            </inertial>
+        </link>
+        <joint name="${wheel_link}_joint" type="continuous">
+            <parent link="base_link"/>
+            <child link="${wheel_link}"/>
+            <axis xyz="0 1 0"/>
+            <origin xyz="${origin}"/>
+        </joint>
+        <transmission name="${wheel_link}_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${wheel_link}_joint">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${wheel_link}_motor">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <!--<mesh filename="package://corobot_description/meshes/base.stl"/>-->
+                <box size="${BASE_LENGTH} ${BASE_WIDTH} ${BASE_HEIGHT}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${BASE_LENGTH} ${BASE_WIDTH} ${BASE_HEIGHT}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${BASE_MASS}"/>
+            <inertia
+                ixx="${BASE_MASS/12*(BASE_HEIGHT**2+BASE_LENGTH**2)}"
+                iyy="${BASE_MASS/12*(BASE_WIDTH**2+BASE_LENGTH**2)}"
+                izz="${BASE_MASS/12*(BASE_WIDTH**2+BASE_HEIGHT**2)}"
+                ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+
+    <xacro:plate name="first_plate" length="0.310" width="0.280"/>
+    <xacro:plate name="top_plate" length="0.217" width="0.280"/>
+
+    <link name="laser">
+        <visual>
+            <geometry>
+                <box size="0.047 0.047 0.070"/>
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.047 0.047 0.070"/>
+            </geometry>
+        </collision>
+        <box_inertia x="0.047" y="0.047" z="0.070" mass="0.001"/>
+    </link>
+
+    <joint name="first_plate_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="first_plate"/>
+        <origin xyz="0.030 0.0 0.082"/>
+    </joint>
+
+    <joint name="top_plate_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="top_plate"/>
+        <origin xyz="0 0 ${0.082 + 0.096}"/>
+    </joint>
+
+    <joint name="laser_joint" type="fixed">
+        <parent link="first_plate"/>
+        <child link="laser"/>
+        <origin xyz="0.135 -0.075 -0.035" rpy="${pi} 0 0"/>
+    </joint>
+
+    <xacro:wheel wheel_link="front_left_wheel" origin="${AXLE_AXLE/2} ${WHEELBASE/2} 0"/>
+    <xacro:wheel wheel_link="front_right_wheel" origin="${AXLE_AXLE/2} ${-WHEELBASE/2} 0"/>
+    <xacro:wheel wheel_link="back_left_wheel" origin="${-AXLE_AXLE/2} ${WHEELBASE/2} 0"/>
+    <xacro:wheel wheel_link="back_right_wheel" origin="${-AXLE_AXLE/2} ${-WHEELBASE/2} 0"/>
+
+   <include filename="$(find turtlebot_arm_description)/urdf/turtlebot_arm.xacro" />
+    <xacro:property name="joints_vlimit" value="1.571"/>
+    <xacro:property name="pan_llimit" value="-2.617"/>
+    <xacro:property name="pan_ulimit" value="2.617"/>
+    <xacro:property name="shoulder_llimit" value="-2.2"/>
+    <xacro:property name="shoulder_ulimit" value="2.16"/>
+    <xacro:property name="elbow_llimit" value="-2.42"/>
+    <xacro:property name="elbow_ulimit" value="2.38"/>
+    <xacro:property name="wrist_llimit" value="-1.72"/>
+	<xacro:property name="wrist_ulimit" value="1.68"/>
+
+   <turtlebot_arm parent="first_plate" color="Black" gripper_color="Black" pincher_gripper="true" turtlebot_gripper="false">
+      <origin xyz="0.135 0.0 0.023"/>
+   </turtlebot_arm>
+    
+</robot>
+

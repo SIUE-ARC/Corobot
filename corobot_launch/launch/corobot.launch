@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="sim" default="false"/>
+
+    <!-- Spawn the gazebo model -->
+    <node if="$(arg sim)" name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false"
+      args="-urdf -model corobot -param robot_description"/>
+
+    <!-- Spawn the controllers -->
+    <include file="$(find corobot_driver)/launch/corobot_driver.launch">
+        <arg name="sim" value="$(arg sim)"/>
+    </include>
+</launch>
+

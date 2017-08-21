@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <name>corobot_description</name>
+  <version>1.0.0</version>
+  <description>The corobot_description package</description>
+
+  <maintainer email="zach.inbox@gmail.com">Zach Anderson</maintainer>
+  <author email="zach.inbox@gmail.com">Zach Anderson</author>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>xacro</build_depend>
+  <build_depend>turtlebot_arm_description</build_depend>
+
+  <export></export>
+</package>
+
