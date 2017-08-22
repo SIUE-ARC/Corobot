@@ -17,7 +17,7 @@ include_directories(
 )
 
 add_executable(corobot_base_driver src/corobot_driver.cpp)
-add_dependencies(corbot_base_driver ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(corobot_base_driver ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(corobot_base_driver
   ${catkin_LIBRARIES}
