@@ -164,7 +164,7 @@
     <xacro:property name="wrist_llimit" value="-1.72"/>
 	<xacro:property name="wrist_ulimit" value="1.68"/>
 
-   <turtlebot_arm parent="first_plate" color="Black" gripper_color="Black" pincher_gripper="true" turtlebot_gripper="false">
+   <turtlebot_arm parent="first_plate" color="Gray" gripper_color="Gray" pincher_gripper="true" turtlebot_gripper="false">
       <origin xyz="0.135 0.0 0.023"/>
    </turtlebot_arm>
     

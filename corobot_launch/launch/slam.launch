@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- Bringup the manual control -->
+	<include file="$(find corobot_driver)/launch/control.launch"/>
+
+	<!-- Bringup the laser -->
+	<node name="laser" pkg="hokuyo_node" type="hokuyo_node">
+		<param name="frame_id" value="front_laser"/>
+		<param name="min_ang" value="-1.5708"/>
+		<param name="max_ang" value="1.5708"/>
+	</node>
+
+	<!-- Come on and slam -->
+	<node name="gslam" pkg="gmapping" type="slam_gmapping">
+		<param name="delta" value="0.05"/>
+	</node>
+</launch>

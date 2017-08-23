@@ -1,14 +1,18 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="sim" default="false"/>
+    <arg name="moveit" default="false"/>
 
     <!-- Spawn the gazebo model -->
     <node if="$(arg sim)" name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false"
       args="-urdf -model corobot -param robot_description"/>
 
-    <!-- Spawn the controllers -->
+    <!-- Spawn the low level drivers -->
     <include file="$(find corobot_driver)/launch/corobot_driver.launch">
         <arg name="sim" value="$(arg sim)"/>
     </include>
+
+    <!-- Spawn the kinematics planning -->
+    <include if="$(arg moveit)" file="$(find corobot_moveit_config)/launch/corobot_moveit.launch"/>
 </launch>
 

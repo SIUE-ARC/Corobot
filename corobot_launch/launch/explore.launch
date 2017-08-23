@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<launch>
+	<!-- Bringup the manual control -->
+	<include file="slam.launch"/>
+
+	<include file="$(find corobot_2dnav)/launch/move_base.launch"/>
+	<include file="$(find frontier_exploration)/launch/global_map.launch"/>
+</launch>

@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: corobot_description
+    relative_path: urdf/corobot.urdf
+  SRDF:
+    relative_path: config/corobot.srdf
+  CONFIG:
+    author_name: Zach Anderson
+    author_email: zach.inbox@gmail.com
+    generated_timestamp: 1503438951
