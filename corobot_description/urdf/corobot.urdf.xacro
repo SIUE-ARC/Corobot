@@ -116,7 +116,7 @@
     <xacro:plate name="first_plate" length="0.310" width="0.280"/>
     <xacro:plate name="top_plate" length="0.217" width="0.280"/>
 
-    <link name="laser">
+    <link name="laser_link">
         <visual>
             <geometry>
                 <box size="0.047 0.047 0.070"/>
@@ -144,7 +144,7 @@
 
     <joint name="laser_joint" type="fixed">
         <parent link="first_plate"/>
-        <child link="laser"/>
+        <child link="laser_link"/>
         <origin xyz="0.135 -0.075 -0.035" rpy="${pi} 0 0"/>
     </joint>
 
