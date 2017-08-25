@@ -5,7 +5,7 @@
     <xacro:property name="BASE_LENGTH" value="0.248" />
     <xacro:property name="BASE_WIDTH" value="0.201" />
     <xacro:property name="BASE_HEIGHT" value="0.060" />
-    <xacro:property name="BASE_MASS" value="1.0" />
+    <xacro:property name="BASE_MASS" value="8.6" />
 
     <xacro:property name="WHEEL_THICKNESS" value="0.065" />
     <xacro:property name="WHEEL_RADIUS" value="0.060" />
@@ -14,7 +14,7 @@
     <xacro:property name="WHEELBASE" value="0.280" />
     <xacro:property name="AXLE_AXLE" value="0.190" />
 
-    <xacro:property name="WHEEL_MASS" value="0.1" />
+    <xacro:property name="WHEEL_MASS" value="0.9" />
     <xacro:property name="WHEEL_MOMENT" value="${WHEEL_MASS/12*(3*WHEEL_RADIUS**2+WHEEL_THICKNESS**2)}" />
 
     <xacro:property name="PLATE_THICKNESS" value="0.006"/>
@@ -50,7 +50,7 @@
                     <box size="${length} ${width} ${PLATE_THICKNESS}"/>
                 </geometry>
             </collision>
-            <xacro:box_inertia x="${length}" y="${width}" z="${PLATE_THICKNESS}" mass="0"/>
+            <xacro:box_inertia x="${length}" y="${width}" z="${PLATE_THICKNESS}" mass="0.1"/>
         </link>
     </xacro:macro>
 
@@ -91,7 +91,14 @@
         </transmission>
     </xacro:macro>
 
-    <link name="base_link">
+    <link name="base_link"/>
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="base"/>
+    </joint>
+
+    <link name="base">
         <visual>
             <geometry>
                 <!--<mesh filename="package://corobot_description/meshes/base.stl"/>-->
@@ -103,14 +110,7 @@
                 <box size="${BASE_LENGTH} ${BASE_WIDTH} ${BASE_HEIGHT}"/>
             </geometry>
         </collision>
-        <inertial>
-            <mass value="${BASE_MASS}"/>
-            <inertia
-                ixx="${BASE_MASS/12*(BASE_HEIGHT**2+BASE_LENGTH**2)}"
-                iyy="${BASE_MASS/12*(BASE_WIDTH**2+BASE_LENGTH**2)}"
-                izz="${BASE_MASS/12*(BASE_WIDTH**2+BASE_HEIGHT**2)}"
-                ixy="0" ixz="0" iyz="0"/>
-        </inertial>
+        <box_inertia x="${BASE_LENGTH}" y="${BASE_WIDTH}" z="${BASE_HEIGHT}" mass="${BASE_MASS}"/>
     </link>
 
     <xacro:plate name="first_plate" length="0.310" width="0.280"/>
