@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>corobot_demos</name>
+  <version>0.0.0</version>
+  <description>The corobot_demos package</description>
+
+  <maintainer email="zach.inbox@gmail.com">Zach Anderson</maintainer>
+  <author email="zach.inbox@gmail.com">Zach Anderson</author>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <export>
+  </export>
+</package>

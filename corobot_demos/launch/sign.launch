@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="sim" default="false"/>
+
+    <include file="$(find corobot_launch)/launch/corobot.launch">
+        <arg name="moveit" value="true"/>
+        <arg name="sim" value="$(arg sim)"/>
+    </include>
+
+    <rosparam command="load" file="$(find corobot_demos)/config/poses.yaml"/>
+    <node output="screen" name="sign" type="sign.py" pkg="corobot_demos"/>
+</launch>
+
