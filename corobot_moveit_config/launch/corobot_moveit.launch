@@ -4,7 +4,7 @@
   <arg name="sim" default="false" />
 
   <!-- By default, we are not in debug mode -->
-  <arg name="debug" default="true" />
+  <arg name="debug" default="false" />
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find corobot_moveit_config)/launch/planning_context.launch">
@@ -14,13 +14,15 @@
   <include file="$(find corobot_moveit_config)/launch/corobot_moveit_controller_manager.launch"/>
 
   <!-- Publish fake joint states if we do not have a robot connected -->
-  <!--<node if="$(arg sim)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">-->
-    <!--<param name="/use_gui" value="false"/> -->
-    <!--<rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>-->
-  <!--</node>-->
-  
-  <!-- Given the published joint states, publish tf for the robot links -->
-  <!--<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />-->
+  <group if="$(arg sim)">
+      <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="/use_gui" value="false"/> 
+        <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
+      </node>
+      
+      <!-- Given the published joint states, publish tf for the robot links -->
+      <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+  </group>
 
   <!-- Run the main MoveIt executable:
         - with trajectory execution, assuming we have controllers configured and running

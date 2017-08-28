@@ -8,6 +8,7 @@ controller_list:
       - arm_shoulder_lift_joint
       - arm_elbow_flex_joint
       - arm_wrist_flex_joint
+      - gripper_link_joint
   - name: gripper_controller
     action_ns: gripper_cmd
     type: GripperCommand

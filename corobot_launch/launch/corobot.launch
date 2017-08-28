@@ -9,7 +9,9 @@
     <!-- Spawn the gazebo model -->
     <group if="$(arg sim)">
         <param name="use_sim_time" value="true"/>
-        <include if="$(arg sim)" file="$(find gazebo_ros)/launch/empty_world.launch"/>
+        <include if="$(arg sim)" file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="gui" value="false"/>
+        </include>
         <node if="$(arg sim)" name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false"
           args="-urdf -model corobot -param robot_description"/>
     </group>
@@ -20,8 +22,6 @@
     </include>
 
     <!-- Spawn the kinematics planning -->
-    <include if="$(arg moveit)" file="$(find corobot_moveit_config)/launch/corobot_moveit.launch">
-        <arg name="debug" value="false"/>
-    </include>
+    <include if="$(arg moveit)" file="$(find corobot_moveit_config)/launch/corobot_moveit.launch"/>
 </launch>
 

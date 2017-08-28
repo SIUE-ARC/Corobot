@@ -13,7 +13,7 @@
     <rosparam file="$(find corobot_driver)/config/controller_config.yaml" command="load"/>
 
     <!-- Spawn controller -->
-    <node name="controller_spawner" 
+    <node name="base_controller_spawner"
 	  pkg="controller_manager" type="spawner" respawn="false"
     output="screen" args="--shutdown-timeout 1 corobot_base joint_state_controller">
 	</node>
