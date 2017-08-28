@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="sim" default="false"/>
+
+    <!-- Remap the diff drive topics for nav stack -->
+	<remap from="/corobot_base/cmd_vel" to="/cmd_vel"/>
+	<remap from="/corobot_base/odom" to="/odom"/>
+
+    <!-- Launch the hardware interface (if not simulating)-->
+    <node unless="$(arg sim)" name="corobot_driver" pkg="corobot_driver" type="corobot_base_driver"/>
+
+    <!-- Load the controller descriptions -->
+    <rosparam file="$(find corobot_driver)/config/controller_config.yaml" command="load"/>
+
+    <!-- Spawn controller -->
+    <node name="controller_spawner" 
+	  pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" args="--shutdown-timeout 1 corobot_base joint_state_controller">
+	</node>
+</launch>
+

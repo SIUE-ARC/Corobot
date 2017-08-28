@@ -5,21 +5,15 @@
     <!-- Load the robot description -->
     <param name="robot_description" command="cat $(find corobot_description)/urdf/corobot.urdf"/>
 
-    <!-- Remap the diff drive topics for nav stack -->
-	<remap from="/corobot_base/cmd_vel" to="/cmd_vel"/>
-	<remap from="/corobot_base/odom" to="/odom"/>
+    <!-- Launch the drivers -->
+    <include file="$(find corobot_driver)/launch/arm.launch">
+        <arg name="sim" value="$(arg sim)"/>
+    </include>
 
-    <!-- Launch the hardware interface (if not simulating)-->
-    <node unless="$(arg sim)" name="corobot_driver" pkg="corobot_driver" type="node"/>
+    <include file="$(find corobot_driver)/launch/base.launch">
+        <arg name="sim" value="$(arg sim)"/>
+    </include>
 
-    <!-- Load the controller descriptions -->
-    <rosparam file="$(find corobot_driver)/config/controller_config.yaml" command="load"/>
-
-    <!-- Spawn controller -->
-    <node name="controller_spawner" 
-	  pkg="controller_manager" type="spawner" respawn="false"
-    output="screen" args="--shutdown-timeout 1 corobot_base joint_state_controller arm_controller gripper_controller">
-	</node>
 
     <!-- Convert joint states to /tf tranforms -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>

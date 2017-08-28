@@ -20,6 +20,8 @@
     </include>
 
     <!-- Spawn the kinematics planning -->
-    <include if="$(arg moveit)" file="$(find corobot_moveit_config)/launch/corobot_moveit.launch"/>
+    <include if="$(arg moveit)" file="$(find corobot_moveit_config)/launch/corobot_moveit.launch">
+        <arg name="debug" value="false"/>
+    </include>
 </launch>
 
