@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+    <node output="screen" name="laser_filter" pkg="laser_assembler" type="laser_scan_assembler">
+        <param name="fixed_frame" value="laser_link"/>
+        <param name="tf_cache_time_secs" value="2"/>
+        <param name="max_scans" value="1000"/>
+    </node>
+    <node output="screen" name="cloud_publisher" pkg="laser_segmentation" type="cloud_publisher.py"/>
+</launch>
+
