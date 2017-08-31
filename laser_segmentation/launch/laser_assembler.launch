@@ -6,5 +6,6 @@
         <param name="max_scans" value="1000"/>
     </node>
     <node output="screen" name="cloud_publisher" pkg="laser_segmentation" type="cloud_publisher.py"/>
+    <node output="screen" name="cloud_segmenter" pkg="laser_segmentation" type="laser_segmentation"/>
 </launch>
 
