@@ -1,6 +1,9 @@
 joint_state_controller:
     type: joint_state_controller/JointStateController
     publish_rate: 100
+    extra_joints:
+        - name: "gripper_link_joint"
+          position: 0.0
 
 corobot_base:
   type: "diff_drive_controller/DiffDriveController"
@@ -12,10 +15,24 @@ corobot_base:
   publish_rate: 50.0
 
 arm_controller:
-  type: position_controllers/JointTrajectoryController
+  type: effort_controllers/JointTrajectoryController
   joints: [arm_shoulder_pan_joint, arm_shoulder_lift_joint, arm_elbow_flex_joint, arm_wrist_flex_joint]
 
+  constraints:
+    goal_time: 0.5
+
+  gains:
+      arm_shoulder_pan_joint:  {p: 10, i: 0.1, d: 0, i_clamp: 1}
+      arm_shoulder_lift_joint: {p: 10, i: 0.1, d: 0, i_clamp: 1}
+      arm_elbow_flex_joint:    {p: 10, i: 0.1, d: 0, i_clamp: 1}
+      arm_wrist_flex_joint:    {p: 10, i: 0.1, d: 0, i_clamp: 1}
+
 gripper_controller:
-  type: position_controllers/GripperActionController
-  joint: gripper_joint
+    type: effort_controllers/GripperActionController
+    joint: gripper_joint
+    goal_tolerance: 0.01
+    stalled_velocity_threshold: 0.01
+    stall_timeout: 0.2
+    gains:
+      gripper_joint: {p: 0.005, i: 0, d: 0.001, i_clamp: 0}
 
