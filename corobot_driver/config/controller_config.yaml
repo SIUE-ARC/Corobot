@@ -36,3 +36,6 @@ gripper_controller:
     gains:
       gripper_joint: {p: 0.005, i: 0, d: 0.001, i_clamp: 0}
 
+  constraints:
+    goal_time: 0.5
+

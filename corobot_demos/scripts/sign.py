@@ -11,7 +11,6 @@ from geometry_msgs.msg import PoseStamped
 roscpp_initialize(sys.argv)
 rospy.init_node('sign_demo')
 
-rospy.sleep(15)
 scene = PlanningSceneInterface()
 robot = RobotCommander()
 robot.arm.set_goal_orientation_tolerance(0.01)
